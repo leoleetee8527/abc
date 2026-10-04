@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>DEMO - SMART MENU</title>
+   <style>
+       * {
+           box-sizing: border-box;
+           margin: 0;
+           padding: 0;
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, Arial, "Helvetica Neue", sans-serif;
+       }
+
+
+
+
+       body {
+           background: #f4f4f4;
+           color: #333;
+           transition: 0.3s;
+           overflow-y: auto;
+       }
+
+
+
+
+       body.dark {
+           background: #121212;
+           color: white;
+       }
+
+
+
+
+       /* HEADER & BANNER */
+       .header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 15px 20px;
+           background: white;
+           border-bottom: 1px solid #ddd;
+           height: 70px;
+           position: sticky;
+           top: 0;
+           z-index: 2000;
+       }
+
+
+
+
+       body.dark .header {
+           background: #1f1f1f;
+           border-color: #333;
+       }
+
+
+
+
+       .left,
+       .right {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+       }
+
+
+
+
+       .logo {
+           height: 40px;
+           border-radius: 5px;
+       }
+
+
+
+
+       .avatar {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           border: 2px solid #d35400;
+       }
+
+
+
+
+       .icon {
+           width: 35px;
+           height: 35px;
+           border-radius: 50%;
+           background: #f2f2f2;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+       }
+
+
+
+
+       body.dark .icon {
+           background: #2a2a2a;
+       }
+
+
+
+
+       /* CẤU TRÚC SEARCH TRÊN HEADER */
+       .search-container {
+           display: flex;
+           align-items: center;
+           background: #f9f9f9;
+           border: 1px solid #ddd;
+           border-radius: 20px;
+           padding: 5px 12px;
+           width: 200px;
+           transition: 0.3s;
+       }
+
+
+
+
+       body.dark .search-container {
+           background: #2a2a2a;
+           border-color: #444;
+       }
+
+
+
+
+       #search-input {
+           border: none;
+           outline: none;
+           background: transparent;
+           color: inherit;
+           font-size: 13px;
+           width: 100%;
+           font-family: inherit;
+       }
+
+
+
+
+       /* BANNER SLIDER */
+       .banner {
+           width: 100%;
+           background-image: url('https://halotravel.vn/wp-content/uploads/2021/04/nha-hang-mon-viet-sang-trong-quan-1-2-1024x768.jpg');
+           background-size: cover;
+           background-position: center;
+           background-repeat: no-repeat;
+           display: flex;
+           justify-content: center;
+           overflow: hidden;
+           position: relative;
+           height: 300px;
+       }
+
+
+
+
+       .banner-container {
+           display: flex;
+           width: 100%;
+           height: 100%;
+           user-select: none;
+           pointer-events: none;
+       }
+
+
+
+
+       .banner-container img {
+           min-width: 100%;
+           height: 100%;
+           display: block;
+           object-fit: contain;
+           background-color: transparent;
+       }
+
+
+
+
+       #table-info {
+           position: relative;
+           /* Đổi từ absolute sang relative để nó tự tìm chỗ trống */
+           left: auto;
+           transform: none;
+           font-weight: bold;
+           color: #d35400;
+           font-size: 0.95rem;
+           /* Giảm nhẹ để vừa màn hình đt */
+           white-space: nowrap;
+           margin-right: 5px;
+           /* Tạo khoảng cách với icon trăng khuyết */
+       }
+
+
+
+
+       /* MAIN LAYOUT */
+       .main-container {
+           display: flex;
+           width: 95%;
+           margin: 10px auto;
+           gap: 20px;
+           align-items: flex-start;
+       }
+
+
+
+
+       .content-area {
+           flex: 3;
+           min-height: 100vh;
+       }
+
+
+
+
+       /* TABS CỐ ĐỊNH KHI CUỘN */
+       .sticky-nav {
+           position: sticky;
+           top: 70px;
+           z-index: 1000;
+           background: #f4f4f4;
+           padding: 15px 0;
+           display: flex;
+           align-items: center;
+           gap: 10px;
+       }
+
+
+
+
+       body.dark .sticky-nav {
+           background: #121212;
+       }
+
+
+
+
+       .top-menu {
+           display: flex;
+           gap: 10px;
+           background: #e0e0e0;
+           padding: 8px;
+           border-radius: 12px;
+           width: fit-content;
+       }
+
+
+
+
+       body.dark .top-menu {
+           background: #2a2a2a;
+       }
+
+
+
+
+       .top-menu-item {
+           text-decoration: none;
+           color: #555;
+           padding: 8px 20px;
+           border-radius: 8px;
+           font-size: 14px;
+           font-weight: bold;
+           cursor: pointer;
+           transition: 0.3s;
+       }
+
+
+
+
+       body.dark .top-menu-item {
+           color: #bbb;
+       }
+
+
+
+
+       .top-menu-item.active {
+           background: #d35400 !important;
+           color: white !important;
+       }
+
+
+
+
+       /* GRID */
+       .article-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+           gap: 20px;
+           padding-bottom: 50px;
+       }
+
+
+
+
+       .article-card {
+           background: white;
+           padding: 10px;
+           border-radius: 12px;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+           transition: 0.3s;
+       }
+
+
+
+
+       .article-card:hover {
+           transform: translateY(-5px);
+       }
+
+
+
+
+       body.dark .article-card {
+           background: #1e1e1e;
+       }
+
+
+
+
+       .img {
+           width: 100%;
+           height: 150px;
+           object-fit: cover;
+           border-radius: 8px;
+           background: #eee;
+       }
+
+
+
+
+       .article-title {
+           margin: 10px 0 5px;
+           font-size: 0.95rem;
+           height: 2.4em;
+           overflow: hidden;
+           font-weight: bold;
+       }
+
+
+
+
+       .article-desc {
+           color: #d35400;
+           margin-bottom: 10px;
+           font-weight: bold;
+       }
+
+
+
+
+       .btn-more {
+           display: block;
+           text-align: center;
+           padding: 8px;
+           background: #00aeef;
+           color: white;
+           text-decoration: none;
+           border-radius: 5px;
+           font-size: 0.85em;
+           font-weight: bold;
+       }
+
+
+
+
+       /* SIDEBAR */
+       .sidebar {
+           flex: 1.2;
+           background: white;
+           border-radius: 15px;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+           position: sticky;
+           top: 85px;
+           overflow: hidden;
+           z-index: 900;
+       }
+
+
+
+
+       body.dark .sidebar {
+           background: #1e1e1e;
+       }
+
+
+
+
+       .cart-header {
+           padding: 15px;
+           background: #fafafa;
+           border-bottom: 1px solid #eee;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+
+
+
+
+       body.dark .cart-header {
+           background: #252525;
+           border-color: #333;
+       }
+
+
+
+
+       .cart-section {
+           padding: 15px;
+           max-height: 60vh;
+           overflow-y: auto;
+       }
+
+
+
+
+       .footer-payment {
+           padding: 15px;
+           border-top: 1px solid #eee;
+       }
+
+
+
+
+       .total {
+           font-weight: bold;
+           color: #d35400;
+           font-size: 18px;
+           display: flex;
+           justify-content: space-between;
+           margin-top: 10px;
+       }
+
+
+
+
+       .submit-btn {
+           width: 100%;
+           background: #d35400;
+           color: white;
+           border: none;
+           padding: 12px;
+           border-radius: 8px;
+           font-weight: bold;
+           margin-top: 10px;
+           cursor: pointer;
+           font-family: inherit;
+       }
+
+
+
+
+       .item {
+           display: flex;
+           margin-bottom: 15px;
+           align-items: center;
+           gap: 10px;
+       }
+
+
+
+
+       .item-img {
+           width: 45px;
+           height: 45px;
+           border-radius: 5px;
+           object-fit: cover;
+       }
+
+
+
+
+       .btn-qty {
+           width: 22px;
+           height: 22px;
+           border: 1px solid #ddd;
+           background: white;
+           border-radius: 50%;
+           cursor: pointer;
+       }
+
+
+
+
+       /* MODALS & TOAST */
+       #invoice-modal,
+       .modal-overlay {
+           display: none;
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background: rgba(0, 0, 0, 0.8);
+           z-index: 3000;
+           justify-content: center;
+           align-items: center;
+           padding: 20px;
+       }
+
+
+
+
+       .invoice-content {
+           background: white;
+           padding: 20px;
+           width: 100%;
+           max-width: 350px;
+           border-radius: 8px;
+           color: #000;
+           max-height: 90vh;
+           overflow-y: auto;
+       }
+
+
+
+
+       .invoice-table {
+           width: 100%;
+           border-collapse: collapse;
+           font-size: 13px;
+           margin: 10px 0;
+       }
+
+
+
+
+       .invoice-table th {
+           border-bottom: 1px dashed #000;
+           padding: 5px 0;
+           text-align: left;
+       }
+
+
+
+
+       .col-name {
+           width: 45%;
+       }
+
+
+
+
+       .col-price,
+       .col-qty {
+           text-align: center;
+       }
+
+
+
+
+       .col-total {
+           text-align: right;
+       }
+
+
+
+
+       .total-row {
+           border-top: 1px dashed #000;
+           font-weight: bold;
+           margin-top: 10px;
+           padding-top: 5px;
+       }
+
+
+
+
+       .close-invoice {
+           margin-top: 20px;
+           width: 100%;
+           padding: 12px;
+           background: #333;
+           color: white;
+           border: none;
+           cursor: pointer;
+           border-radius: 5px;
+           font-weight: bold;
+           font-family: inherit;
+       }
+
+
+
+
+       .modal-box {
+           background: white;
+           width: 100%;
+           max-width: 320px;
+           border-radius: 15px;
+           padding: 30px 20px;
+           text-align: center;
+           color: #333;
+       }
+
+
+
+
+       .modal-icon {
+           width: 50px;
+           height: 50px;
+           background: #27ae60;
+           color: white;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 25px;
+           margin: 0 auto 15px;
+       }
+
+
+
+
+       .modal-title {
+           font-weight: bold;
+           font-size: 16px;
+           margin-bottom: 10px;
+           color: #d35400;
+       }
+
+
+
+
+       .modal-btn {
+           background: #d35400;
+           color: white;
+           border: none;
+           padding: 12px;
+           border-radius: 25px;
+           font-weight: bold;
+           cursor: pointer;
+           width: 100%;
+           font-family: inherit;
+       }
+
+
+
+
+       #toast-container {
+           position: fixed;
+           top: 85px;
+           right: 20px;
+           z-index: 9999;
+       }
+
+
+
+
+       .toast {
+           background: #27ae60;
+           color: white;
+           padding: 10px 20px;
+           border-radius: 5px;
+           margin-bottom: 8px;
+           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+           animation: slideIn 0.3s ease;
+           font-size: 14px;
+       }
+
+
+
+
+       @keyframes slideIn {
+           from {
+               transform: translateX(100%);
+           }
+
+
+
+
+           to {
+               transform: translateX(0);
+           }
+       }
+
+
+
+
+       #global-note {
+           width: 100%;
+           margin-top: 5px;
+           padding: 8px;
+           font-size: 12px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           resize: none;
+           outline: none;
+           font-family: inherit;
+           color: #333;
+       }
+
+
+
+
+       /* MOBILE OPTIMIZATION */
+       @media (max-width: 768px) {
+           .header .search-container {
+               width: 120px;
+           }
+
+
+
+
+           .main-container {
+               flex-direction: column;
+           }
+
+
+
+
+           .sticky-nav {
+               top: 70px;
+               padding: 10px 0;
+           }
+
+
+
+
+           .sidebar {
+               position: fixed !important;
+               bottom: 0;
+               left: 0;
+               width: 100%;
+               z-index: 2500;
+               margin-top: 0;
+               border-radius: 20px 20px 0 0;
+               height: 65px;
+               transition: height 0.4s ease-in-out;
+               background: #fff;
+               box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+               top: auto;
+           }
+
+
+
+
+           .sidebar.active {
+               height: 85vh;
+               overflow-y: auto;
+           }
+
+
+
+
+           .cart-header {
+               height: 65px;
+               cursor: pointer;
+               background: #d35400 !important;
+               color: white;
+               border: none;
+           }
+
+
+
+
+           .cart-header h3::after {
+               content: ' 🔼';
+               font-size: 12px;
+               margin-left: 8px;
+           }
+
+
+
+
+           .sidebar.active .cart-header h3::after {
+               content: ' 🔽';
+           }
+
+
+
+
+           body {
+               padding-bottom: 80px;
+           }
+       }
+
+
+
+
+       .nav-arrows {
+           position: fixed;
+           right: 15px;
+           bottom: 85px;
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+           z-index: 1001;
+       }
+
+
+
+
+       .arrow-btn {
+           width: 45px;
+           height: 45px;
+           background: #d35400;
+           color: white;
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+           border: none;
+           font-weight: bold;
+           transition: 0.2s;
+       }
+
+
+
+
+       .arrow-btn:active {
+           transform: scale(0.9);
+       }
+
+
+
+
+       .btn-call {
+           background: #27ae60 !important;
+           font-size: 20px;
+       }
+   </style>
+</head>
+
+
+<body>
+   <div id="toast-container"></div>
+   <header class="header">
+       <div class="left">
+           <img class="logo"
+               src="https://raw.githubusercontent.com/DuongLQPTIT/pop-quan-an/refs/heads/main/657534962_1498221541837292_4626700409988075945_n.png">
+           <div class="search-container">
+               <input type="text" id="search-input" placeholder="Tìm tên món..." oninput="searchFood(this.value)">
+               <span style="opacity:0.5">🔍</span>
+           </div>
+       </div>
+       <div class="right">
+           <div id="table-info"></div>
+           <div class="icon" onclick="toggleDark()">🌓</div>
+           <img class="avatar" src="https://i.pravatar.cc/100">
+       </div>
+   </header>
+
+
+   <div class="banner" >
+       <div class="banner-container" >
+           <img src="https://raw.githubusercontent.com/DuongLQPTIT/pop-quan-an/refs/heads/main/661366807_4223851564532530_1368547044873374033_n.png">
+           
+       </div>
+   </div>
+
+
+   <main class="main-container">
+       <section class="content-area">
+           <div class="sticky-nav">
+               <div class="top-menu">
+                   <div class="top-menu-item active" onclick="filterMenu('main', this)">Món chính</div>
+                   <div class="top-menu-item" onclick="filterMenu('drink', this)">Đồ uống</div>
+                   <div class="top-menu-item" onclick="filterMenu('dessert', this)">Tráng miệng</div>
+               </div>
+           </div>
+           <div class="article-grid" id="menu-grid"></div>
+       </section>
+
+
+       <aside class="sidebar" id="mobile-sidebar">
+           <div class="cart-header" onclick="toggleMobileCart()">
+               <h3>Món đã chọn (<span id="count-items">0</span>)</h3>
+               <span style="font-size: 12px; color: inherit; cursor: pointer; text-decoration: underline;"
+                   onclick="event.stopPropagation(); clearCart();">Xóa tất cả</span>
+           </div>
+           <div class="cart-section">
+               <div id="cart-list"></div>
+           </div>
+           <div class="takeaway-area" style="padding: 0 15px;">
+               <label style="font-size: 11px; font-weight: bold; color: #d35400;">Ghi chú / khác:</label>
+               <textarea id="global-note" rows="2"
+                   placeholder=" Quý khách mua mang về tất cả ghi chú tại đây..."></textarea>
+           </div>
+           <footer class="footer-payment">
+               <div class="total"><span>Tổng cộng:</span><span id="final-total">0VND</span></div>
+               <button class="submit-btn" onclick="showInvoice()">Đến bước thanh toán →</button>
+           </footer>
+       </aside>
+   </main>
+
+
+   <div id="invoice-modal">
+       <div class="invoice-content">
+           <div style="text-align: center;">
+               <h2 style="margin:0; font-family: inherit;">HÓA ĐƠN</h2>
+               <p>------------------------------</p>
+           </div>
+           <table class="invoice-table">
+               <thead>
+                   <tr>
+                       <th class="col-name">Tên</th>
+                       <th class="col-price">ĐG</th>
+                       <th class="col-qty">SL</th>
+                       <th class="col-total">T.Tiền</th>
+                   </tr>
+               </thead>
+               <tbody id="invoice-items"></tbody>
+           </table>
+           <div class="total-row">
+               <p style="display:flex; justify-content: space-between;"><span>TỔNG CỘNG:</span><span
+                       id="invoice-total">0VND</span></p>
+           </div>
+           <div style="text-align: center; margin: 15px 0; border: 1px solid #eee; padding: 10px; border-radius: 5px;">
+               <p id="acc-name" style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #d35400;"></p>
+               <div style="min-height: 150px; display: flex; align-items: center; justify-content: center;">
+                   <img id="qr-code" style="width: 150px; display: none;">
+                   <p id="qr-loading" style="font-size: 12px;">Đang tạo mã thanh toán...</p>
+               </div>
+               <p id="timer-display" style="font-size: 12px; color: red; margin-top: 5px;"></p>
+           </div>
+           <button class="close-invoice" onclick="closeInvoice()">XÁC NHẬN ĐÃ CHUYỂN</button>
+           <button class="close-invoice" style="background:#eee; color:#333; margin-top:5px;"
+               onclick="document.getElementById('invoice-modal').style.display='none'">QUAY LẠI</button>
+       </div>
+   </div>
+
+
+   <div class="modal-overlay" id="orderModal">
+       <div class="modal-box">
+           <div class="modal-icon">✓</div>
+           <div class="modal-title">Thanh toán thành công!</div>
+           <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Cảm ơn bạn, món ăn của bạn đang được chế biến.
+           </p>
+           <button class="modal-btn" onclick="closeOrderModal()"> Tiếp tục gọi món </button>
+       </div>
+   </div>
+
+
+   <div class="nav-arrows">
+       <button class="arrow-btn btn-call" onclick="callStaff()" title="Gọi phục vụ">🔔</button>
+       <button class="arrow-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">▲</button>
+       <button class="arrow-btn"
+           onclick="document.getElementById('menu-grid').scrollIntoView({behavior: 'smooth', block: 'end'})">▼</button>
+   </div>
+
+
+   <footer
+       style="background: #001a33; color: white; text-align: center; padding: 20px; margin-top: 30px; font-size: 13px; line-height: 1.6;">
+       <p>📍 Địa chỉ: 12B Thị Xá, Gia Phúc, TP Hải Phòng</p>
+       <p>📞 <b>Hotline:</b> 0356 378 392 | <b>Email:</b> bepviet.info@gmail.com</p>
+       <p style="opacity: 0.7; margin-top: 10px;"> © 2026 Bep Viet Restaurant. All rights reserved.</p>
+   </footer>
+
+
+   <script>
+       const BANK_ID = "MB";
+       const ACCOUNT_NO = "0862976818";
+       const ACCOUNT_NAME = "NGUYEN QUOC BAO";
+       const menuData = [
+           { id: 101, type: 'main', name: "BÚN BÒ HUẾ", price: 69000, img: "https://kinhdoamthuc.com/wp-content/uploads/2023/07/bun-bo-hue-1_1628650972.jpg" },
+           { id: 102, type: 'main', name: "CƠM TẤM SƯỜN", price: 69000, img: "https://cafefcdn.com/203337114487263232/2022/12/7/photo-9-1670398141900764774990.jpg" },
+           { id: 103, type: 'main', name: "PHỞ HÀ NỘI", price: 59000, img: "https://static.vinwonders.com/production/optimize_pho-ha-noi-2.jpg" },
+           { id: 104, type: 'main', name: "BÁNH XÈO", price: 49000, img: "https://www.huongnghiepaau.com/wp-content/uploads/2017/02/cach-lam-banh-xeo-mien-trung.jpg" },
+           { id: 105, type: 'main', name: "GỎI CUỐN TÔM", price: 59000, img: "https://i.ytimg.com/vi/lAOHvUGfOdM/sddefault.jpg" },
+           { id: 106, type: 'main', name: "BÚN ĐẬU MẮM TÔM", price: 59000, img: "https://i-giadinh.vnecdn.net/2025/05/16/Bun-dau-mam-tom-6-vnexpress-17-9082-8722-1747388531.jpg" },
+           { id: 107, type: 'main', name: "BÁNH MÌ", price: 25000, img: "https://cdn-i2.congthuong.vn/stores/news_dataimages/2024/032024/16/09/top-1-mon-sandwich-ngon-nhat-the-gioi-goi-ten-banh-my-viet-nam1710498007-182420240316092132.jpg?rt=20240316092204" },
+           { id: 108, type: 'main', name: "BÚN CHẢ", price: 39000, img: "https://cooponline.vn/tin-tuc/wp-content/uploads/2025/10/hoc-cach-lam-bun-cha-mien-bac-chuan-ha-noi-tai-nha.png" },
+           { id: 109, type: 'main', name: "PHỞ CUỐN", price: 59000, img: "https://cdnv2.tgdd.vn/mwg-static/common/Common/H%C3%ACnh%20m%C3%B3n%20an%20t11%20%281200%20x%20676%20px%29%20-%202025-11-24T103337.919.jpg" },
+           { id: 110, type: 'main', name: "NEM NƯỚNG", price: 49000, img: "https://www.cleanipedia.com/images/5iwkm8ckyw6v/jLmMMPcXosJS3bzHN3VOM/00f5ae7421ecd5584451438559d86b50/Y2FjaC1sYW0tbmVtLW51b25nLmpwZw/1200w/m%E1%BB%99t-%C4%91%C4%A9a-th%E1%BB%A9c-%C4%83n-vi%E1%BB%87t-nam-v%E1%BB%9Bi-ch%E1%BA%A3-gi%C3%B2%2C-nem-n%C6%B0%E1%BB%9Bng%2C-rau-s%E1%BB%91ng-v%C3%A0-n%C6%B0%E1%BB%9Bc-ch%E1%BA%A5m..jpg" },
+           { id: 201, type: 'drink', name: "TRÀ ĐÀO CAM SẢ", price: 35000, img: "https://cdn-merchant.vinid.net/images/gallery/vinshop-seo/1749515439_cong-thuc-pha-tra-dao-cam-sa-3.jpg" },
+           { id: 202, type: 'drink', name: "CÀ PHÊ MUỐI", price: 30000, img: "https://cubes-asia.com/storage/blogs/2024-12/cach-lam-ca-phe-muoi-nguyen-lieu-cong-thuc-lam.jpg" },
+           { id: 203, type: 'drink', name: "NƯỚC ÉP CAM", price: 35000, img: "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2022/2/19/cach-lam-nuoc-cam-ep-ngon-va-thom-ket-hop-voi-le-va-gung-5-1645248090817401855254.jpg" },
+           { id: 204, type: 'drink', name: "NƯỚC ÉP DƯA HẤU", price: 35000, img: "https://product.hstatic.net/1000187248/product/nuoc-ep-dua-hau_88dc3c4c697742f4a7052c2a109ddd3e_grande.jpg" },
+           { id: 205, type: 'drink', name: "CHANH DÂY NHA ĐAM", price: 30000, img: "https://bizweb.dktcdn.net/100/021/355/products/tra-xanh-chanh-leo-lo-hoi-1-28c280fd-e6ed-4ec5-864c-fe8e85175ae3.jpg?v=1570164190110" },
+           { id: 206, type: 'drink', name: "NƯỚC DỪA", price: 35000, img: "https://production-cdn.pharmacity.io/digital/original/plain/blog/pcPvNHnI-nuoc_dua_dun_nong_co_tac_dung_gi_nhung_luu_y_quan_trong_khi_su_dung_nuoc_dua_1_753c316f21.jpg" },
+           { id: 207, type: 'drink', name: "BIA TƯƠI", price: 35000, img: "https://thegioibiatuoi.com/wp-content/uploads/2025/11/bia-tuoi-bay-lager.jpg" },
+           { id: 208, type: 'drink', name: "SINH TỐ BƠ", price: 35000, img: "https://elmich.vn/wp-content/uploads/2024/01/Sinh-to-bo-6.jpg" },
+           { id: 209, type: 'drink', name: "COCACOLA", price: 15000, img: "https://www.coca-cola.com/content/dam/onexp/vn/vi/brands/coca-cola/vn-coca-cola-zero.png" },
+           { id: 210, type: 'drink', name: "SPRITE", price: 15000, img: "https://maltco.vn/media/catalog/product/cache/e23dd0f7bd71f6870bbc835b86d5d59e/s/p/sprite_softdrink.webp" },
+           { id: 301, type: 'dessert', name: "CHÈ KHÚC BẠCH", price: 25000, img: "https://cdn.tgdd.vn/2021/10/CookDish/che-khuc-bach-la-gi-che-khuc-bach-lam-tu-gi-nguyen-lieu-lam-avt-1200x676.jpg" },
+           { id: 302, type: 'dessert', name: "CHÈ DỪA DẦM", price: 25000, img: "https://cdn.mediamart.vn/images/news/vao-bp-hc-cach-nu-che-da-dm-hi-phong-ngon-ngt-ngay_028720f1.jpg" },
+           { id: 303, type: 'dessert', name: "HOA QUẢ THEO MÙA", price: 35000, img: "https://file.hstatic.net/200000333181/article/264191096-h-696x476_9b7c0dacaa144901b0f236dd8b023b0d.jpg" },
+           { id: 304, type: 'dessert', name: "SỮA CHUA NẾP CẨM ", price: 20000, img: "https://beptruong.edu.vn/wp-content/uploads/2019/03/sua-chua-nep-cam.jpg" },
+           { id: 305, type: 'dessert', name: "KEM TƯƠI", price: 20000, img: "https://dungcunhahang.com/wp-content/uploads/2025/01/Ly-Kem-800x800-3.png" },
+           { id: 306, type: 'dessert', name: "PANNA COTTA", price: 20000, img: "https://cdn.jwplayer.com/v2/media/XUqZDSbG/thumbnails/HNylojyg.jpg?width=1280" },
+           { id: 307, type: 'dessert', name: "BÁNH FLAN", price: 25000, img: "https://www.huongnghiepaau.com/wp-content/uploads/2019/04/cach-lam-banh-flan-pho-mai.jpg" },
+           { id: 308, type: 'dessert', name: "RAU CAU", price: 20000, img: "https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_1_18_638412156621577284_cach-nau-rau-cau.jpg" },
+           { id: 309, type: 'dessert', name: "BÁNH PÍA", price: 25000, img: "https://banhbaominh.com/wp-content/uploads/2023/08/kham-pha-huong-vi-banh-pia-soc-trang-banh-pia-soc-trang1.jpeg" },
+           { id: 310, type: 'dessert', name: "BÁNH ÍT TRẦN", price: 25000, img: "https://cdn.eva.vn/upload/4-2021/images/2021-10-21/image8-1634782289-902-width650height460.jpg" },
+       ];
+       let cart = [];
+       let timerInterval;
+       let currentCategory = 'main';
+
+
+       function toggleDark() { document.body.classList.toggle("dark"); }
+       function showToast(msg) {
+           const container = document.getElementById('toast-container');
+           const t = document.createElement('div');
+           t.className = 'toast'; t.innerText = msg;
+           container.appendChild(t);
+           setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }, 2000);
+       }
+       function filterMenu(type, element) {
+           currentCategory = type;
+           document.getElementById('search-input').value = "";
+           document.querySelectorAll('.top-menu-item').forEach(item => item.classList.remove('active'));
+           if (element) element.classList.add('active');
+           renderMenu(menuData.filter(m => m.type === type));
+       }
+       function searchFood(val) {
+           const keyword = val.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+           if (!keyword) return filterMenu(currentCategory, document.querySelector(`.top-menu-item[onclick*='${currentCategory}']`));
+           document.querySelectorAll('.top-menu-item').forEach(item => item.classList.remove('active'));
+           const filtered = menuData.filter(item => item.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").includes(keyword));
+           renderMenu(filtered);
+       }
+       function renderMenu(items) {
+           const grid = document.getElementById('menu-grid');
+           if (items.length === 0) {
+               grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; padding: 20px; color:#999;">Không tìm thấy món ăn phù hợp.</p>`;
+               return;
+           }
+           grid.innerHTML = items.map(item => `
+           <div class="article-card">
+               <img src="${item.img}" class="img" onerror="this.src='https://via.placeholder.com/150?text=Food'">
+               <h4 class="article-title">${item.name}</h4>
+               <p class="article-desc">${item.price.toLocaleString()} VND</p>
+               <a href="javascript:void(0)" class="btn-more" onclick="addToCart(${item.id})">THÊM MÓN</a>
+           </div>
+       `).join('');
+       }
+       function addToCart(id) {
+           const product = menuData.find(p => p.id === id);
+           const inCart = cart.find(c => c.id === id);
+           if (inCart) inCart.qty++; else cart.push({ ...product, qty: 1 });
+           renderCart();
+           showToast(`Đã thêm ${product.name}`);
+       }
+       function updateQty(id, change) {
+           const item = cart.find(i => i.id === id);
+           if (item) {
+               item.qty += change;
+               if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+               renderCart();
+           }
+       }
+       function clearCart() {
+           if (confirm("Bạn muốn xóa toàn bộ giỏ hàng?")) {
+               cart = [];
+               renderCart();
+           }
+       }
+       function renderCart() {
+           const list = document.getElementById('cart-list');
+           let total = 0;
+           if (cart.length === 0) {
+               list.innerHTML = `<p style="text-align:center; color:#999; font-size:14px; padding: 20px;">Giỏ hàng của bạn đang trống</p>`;
+           } else {
+               list.innerHTML = cart.map(item => {
+                   total += item.price * item.qty;
+                   return `<div class="item">
+                   <img src="${item.img}" class="item-img" onerror="this.src='https://via.placeholder.com/50'">
+                   <div style="flex:1">
+                       <div style="font-weight:bold; font-size:13px;">${item.name}</div>
+                       <input type="text" style="width: 100%; margin-top: 5px; padding: 4px; font-size: 11px; border: 1px solid #eee; border-radius: 4px; outline: none; color: #d35400; font-family: inherit;" placeholder="Ghi chú (VD: Muốn mang về X phần; ít cay...)" oninput="updateItemNote(${item.id}, this.value)" value="${item.note || ''}">
+                       <div style="display:flex; align-items:center; gap:8px; margin-top:3px;">
+                           <button class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
+                           <span>${item.qty}</span>
+                           <button class="btn-qty" onclick="updateQty(${item.id}, 1)">+</button>
+                       </div>
+                   </div>
+                   <b style="font-size:13px;">${(item.price * item.qty).toLocaleString()}VND</b>
+               </div>`;
+               }).join('');
+           }
+           document.getElementById('final-total').innerText = total.toLocaleString() + 'VND';
+           document.getElementById('count-items').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+       }
+       function updateItemNote(id, val) {
+           const item = cart.find(i => i.id === id);
+           if (item) item.note = val;
+       }
+       function showInvoice() {
+           if (cart.length === 0) return alert("Hãy chọn món trước khi thanh toán nhé!");
+           document.getElementById('mobile-sidebar').classList.remove('active');
+           const invoiceModal = document.getElementById('invoice-modal');
+           let total = 0;
+           let itemsHtml = cart.map(item => {
+               total += item.price * item.qty;
+               const noteRieng = item.note ? ` (${item.note})` : "";
+               return `<tr><td>${item.name}${noteRieng}</td><td class="col-price">${item.price / 1000}k</td><td class="col-qty">${item.qty}</td><td class="col-total">${(item.price * item.qty).toLocaleString()}</td></tr>`;
+           }).join('');
+           const noteChung = document.getElementById('global-note').value.trim();
+           if (noteChung) itemsHtml += `<tr><td colspan="4" style="font-size:11px; color:gray; padding-top:5px;">Ghi chú: ${noteChung}</td></tr>`;
+           document.getElementById('invoice-items').innerHTML = itemsHtml;
+           document.getElementById('invoice-total').innerText = total.toLocaleString() + " VND";
+           document.getElementById('acc-name').innerText = ACCOUNT_NAME;
+           invoiceModal.style.display = 'flex';
+           const qrImg = document.getElementById('qr-code');
+           const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${total}&addInfo=Thanh toan don hang&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+           document.getElementById('qr-loading').style.display = 'block';
+           qrImg.style.display = 'none';
+           qrImg.src = qrUrl;
+           qrImg.onload = () => {
+               document.getElementById('qr-loading').style.display = 'none';
+               qrImg.style.display = 'block';
+               startTimer(300);
+           };
+       }
+       function startTimer(t) {
+           clearInterval(timerInterval);
+           const display = document.getElementById('timer-display');
+           timerInterval = setInterval(() => {
+               let m = Math.floor(t / 60), s = t % 60;
+               display.innerText = `Mã QR hết hạn sau: ${m}:${s < 10 ? '0' : ''}${s}`;
+               if (--t < 0) { clearInterval(timerInterval); display.innerText = "Mã QR đã hết hạn."; }
+           }, 1000);
+       }
+       function closeInvoice() {
+           document.getElementById('invoice-modal').style.display = 'none';
+           document.getElementById('orderModal').style.display = 'flex';
+       }
+       function closeOrderModal() {
+           document.getElementById('orderModal').style.display = 'none';
+           cart = [];
+           renderCart();
+           clearInterval(timerInterval);
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+       }
+       function toggleMobileCart() {
+           if (window.innerWidth <= 768) document.getElementById('mobile-sidebar').classList.toggle('active');
+       }
+       function callStaff() {
+           if (confirm("Bạn cần gọi nhân viên phục vụ?")) {
+               showToast("🔔 Đã gửi yêu cầu! Nhân viên sẽ đến ngay.");
+           }
+       }
+
+
+
+
+
+
+       window.addEventListener('resize', setSliderPosition);
+       renderMenu(menuData.filter(m => m.type === 'main'));
+       renderCart();
+       window.onload = function () {
+           const params = new URLSearchParams(window.location.search);
+           tableNo = params.get("Table");
+           if (tableNo) document.getElementById("table-info").innerText = " BÀN " + tableNo;
+           filterMenu('main', document.querySelector('.top-menu-item'));
+       };
+   </script>
+</body>
+</html>
+
+
+
+
+
+
+
